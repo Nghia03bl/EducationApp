@@ -1,22 +1,29 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native'
+import React, { useContext, useEffect } from 'react'
+import { Button } from 'react-native'
+import Services from '../Shared/Services'
+import { AuthContext } from '../Context/AuthContext'
+import WelcomeHeader from '../Components/WelcomeHeader'
+import SearchBar from '../Components/SearchBar'
+import Slider from '../Components/Slider'
+import VideoCourseList from '../Components/VideoCourseList'
+import CourseList from '../Components/CourseList'
+import { ScrollView } from 'react-native'
 
 export default function Home() {
+    const {userData,setUserData}=useContext(AuthContext)
+   
   return (
-    <View style={styles.container}>
-      <Text style={styles.welcomeText}>Welcome to the Home Screen!</Text>
-    </View>
-  );
+    <ScrollView style={{padding:20}}>
+        <WelcomeHeader/>
+        <SearchBar/>
+        <Slider/>
+        <VideoCourseList/>
+        <CourseList type={'basic'} />
+        <CourseList type={'advance'} />
+        <View style={{height:100}}> 
+          
+        </View>
+    </ScrollView> 
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  welcomeText: {
-    fontSize: 25,
-    fontWeight: 'bold',
-  },
-});
