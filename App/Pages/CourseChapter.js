@@ -11,7 +11,6 @@ import ProgressBar from '../Components/ProgessBar';
 import Services from '../Shared/Services';
 import { AuthContext } from '../Context/AuthContext';
 
-
 export default function CourseChapter() {
     const navigation=useNavigation();
     const param=useRoute().params;

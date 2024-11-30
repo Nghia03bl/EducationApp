@@ -14,7 +14,6 @@ export default function CourseDetails() {
     const [userProgress,setUserProgress]=useState([]);
     const {userData,setUserData}=useContext(AuthContext);
     useEffect(()=>{
-      
         setCourse(param?.courseData);
         param.courseData.id?getCourseProgress():null;
     },[param.courseContentId])
@@ -44,7 +43,7 @@ export default function CourseDetails() {
         <View>
             <Text style={{fontSize:20,
             fontWeight:'bold'}}>{course.name}</Text>
-            <Text style={{color:Colors.gray}}>By Tubeguruji</Text>
+            <Text style={{color:Colors.gray}}>Nghia</Text>
             <Image source={{uri:course.image}} 
             style={{height:150,marginTop:10,borderRadius:10}} />
             <Text style={{marginTop:10,

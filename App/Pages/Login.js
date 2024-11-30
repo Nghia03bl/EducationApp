@@ -1,31 +1,29 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
-import { Fontisto, Ionicons } from '@expo/vector-icons';
-import Colors from '../Shared/Colors';
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import Services from '../Shared/Services';
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
-  };
-
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Lỗi', 'Vui lòng nhập đầy đủ email và mật khẩu.');
       return;
     }
-    if (!validateEmail(email)) {
-      Alert.alert('Email không hợp lệ', 'Vui lòng nhập email hợp lệ.');
-      return;
-    }
-    navigation.replace('Home');
-  };
 
-  const handleForgotPassword = () => {
-    Alert.alert('Forgot Password', 'Please contact support to recover your password.');
+    try {
+      const user = await Services.getUserAuth();
+      if (user && user.email === email && user.password === password) {
+        await Services.setUserAuth(user);
+        navigation.replace('Home');
+      } else {
+        Alert.alert('Lỗi', 'Email hoặc mật khẩu không đúng');
+      }
+    } catch (error) {
+      Alert.alert('Lỗi đăng nhập', 'Không tìm thấy người dùng.');
+    }
   };
 
   return (

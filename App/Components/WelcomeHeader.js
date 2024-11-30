@@ -1,51 +1,59 @@
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../Context/AuthContext';
-
-import { useSQLiteContext, deleteDatabaseAsync } from 'expo-sqlite';
+import * as SQLite from 'expo-sqlite';
 
 export default function WelcomeHeader() {
-    // const { userData } = useContext(AuthContext);
-
-    const db = useSQLiteContext();
-
-    const [userData, setUserData] = useState({});
+    const [userData, setUserData] = useState({
+        email: 'Người dùng',
+        avatar: null
+    });
 
     useEffect(() => {
-        const setUser = async() => {
-            // const user = await db.getFirstAsync(
-            //     'select * from Accounts where email = ?',
-            //     ['test1']
-            // );
-
-            // // setUserData(user);
-            // console.log('data',user);
-
-            // const courses = await db.getAllAsync(
-            //     'select * from Courses'
-            // );
-
-            // console.log('data', courses[0].courseDescription.split('\n'))
-        }
-
-        setUser();
-
+        layThongTinNguoiDung();
     }, []);
+
+    const layThongTinNguoiDung = () => {
+        const db = SQLite.openDatabase('EducationDatabase.db');
+
+        db.transaction(tx => {
+            tx.executeSql(
+                'SELECT email, anh_dai_dien FROM bang_nguoi_dung WHERE dang_nhap_hien_tai = 1 LIMIT 1',
+                [],
+                (_, { rows }) => {
+                    if (rows.length > 0) {
+                        const nguoiDung = rows.item(0);
+                        setUserData({
+                            email: nguoiDung.email || 'Người dùng',
+                            avatar: nguoiDung.anh_dai_dien
+                        });
+                    }
+                },
+                (_, error) => {
+                    console.error('Lỗi lấy thông tin người dùng:', error);
+                }
+            );
+        });
+    };
 
     return (
         <View style={styles.container}>
             <View>
-                <Text>Hello</Text>
+                <Text>Xin chào</Text>
                 <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-                    {userData?.email || "User"}
+                    {userData.email}
                 </Text>
             </View>
 
-            {/* Kiểm tra xem userData có tồn tại và có thuộc tính avatar hay không */}
-            {userData?.avatar ? (
-                <Image source={{ uri: `data:image/png;base64,${userData.avatar}` }} style={{ width: 40, height: 40, borderRadius: 100 }} />
+            {userData.avatar ? (
+                <Image 
+                    source={{ uri: `data:image/png;base64,${userData.avatar}` }} 
+                    style={{ width: 40, height: 40, borderRadius: 100 }} 
+                />
             ) : (
-                <Image source={require('../../assets/default-avatar.jpg')} style={{ width: 40, height: 40, borderRadius: 100 }} />
+                <Image 
+                    source={require('../../assets/default-avatar.jpg')} 
+                    style={{ width: 40, height: 40, borderRadius: 100 }} 
+                />
             )}
         </View>
     );

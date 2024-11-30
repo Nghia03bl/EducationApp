@@ -11,10 +11,14 @@ export default function Register({ navigation }) {
       Alert.alert('Lỗi', 'Vui lòng nhập đầy đủ email và mật khẩu.');
       return;
     }
-    // Lưu thông tin tài khoản vào AsyncStorage
-    await Services.setUserAuth({ email, password });
-    Alert.alert('Thành công', 'Đăng ký thành công!');
-    navigation.replace('Login'); // Chuyển về màn hình Login
+
+    try {
+      await Services.setUserAuth({ email, password });
+      Alert.alert('Thành công', 'Đăng ký thành công!');
+      navigation.replace('Login');
+    } catch (error) {
+      Alert.alert('Lỗi', 'Có lỗi xảy ra trong quá trình đăng ký.');
+    }
   };
 
   return (
